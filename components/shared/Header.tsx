@@ -3,7 +3,7 @@ import HeaderProps from '@interfaces/shared/Header';
 //lib
 import Link from 'next/link';
 //mui
-import { AppBar, Toolbar, Typography } from '@mui/material';
+import { AppBar, Toolbar, Typography, Box, Chip } from '@mui/material';
 import RestaurantMenuIcon from '@mui/icons-material/RestaurantMenu';
 //components
 import SearchBar from '@components/shared/SearchBar';
@@ -15,9 +15,16 @@ import SearchBar from '@components/shared/SearchBar';
  * @returns {JSX.Element} - The header component
  */
 const Header = ({ setFilter, searchTerm }: HeaderProps): JSX.Element => (
-	<AppBar>
-		<Toolbar variant='dense'>
-			<RestaurantMenuIcon sx={{ mr: 2 }} />
+	<AppBar
+		position='sticky'
+		elevation={0}
+		sx={{
+			bgcolor: 'rgba(15, 30, 52, 0.88)',
+			backdropFilter: 'blur(10px)',
+			borderBottom: '1px solid rgba(255, 255, 255, 0.12)',
+		}}
+	>
+		<Toolbar sx={{ minHeight: '72px !important', gap: 2, py: 1 }}>
 			<Link href='/'>
 				<a
 					style={{
@@ -25,13 +32,23 @@ const Header = ({ setFilter, searchTerm }: HeaderProps): JSX.Element => (
 						color: 'inherit',
 					}}
 				>
-					<Typography variant='h6' color='inherit'>
-						HawkerHawk
-					</Typography>
+					<Box sx={{ display: 'flex', alignItems: 'center', gap: 1.2 }}>
+						<RestaurantMenuIcon sx={{ fontSize: '1.5rem' }} />
+						<Typography variant='h6' color='inherit'>
+							HawkerHawk
+						</Typography>
+						<Chip
+							label='Singapore'
+							size='small'
+							sx={{ bgcolor: 'rgba(255, 255, 255, 0.16)', color: '#fff', display: { xs: 'none', md: 'inline-flex' } }}
+						/>
+					</Box>
 				</a>
 			</Link>
 
-			<SearchBar setFilter={setFilter} searchTerm={searchTerm} />
+			<Box sx={{ ml: 'auto', width: { xs: '100%', md: 'min(560px, 60vw)' } }}>
+				<SearchBar setFilter={setFilter} searchTerm={searchTerm} />
+			</Box>
 		</Toolbar>
 	</AppBar>
 );

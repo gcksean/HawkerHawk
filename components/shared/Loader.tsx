@@ -11,8 +11,8 @@ import Box from '@mui/material/Box';
  */
 const Loader = (): JSX.Element => {
 	return (
-		<Box sx={{ display: 'flex' }}>
-			<CircularProgress />
+		<Box sx={{ display: 'flex', justifyContent: 'center', py: 6 }}>
+			<CircularProgress size={48} />
 		</Box>
 	);
 };

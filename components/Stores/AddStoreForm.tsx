@@ -6,7 +6,7 @@ import { useFormik } from 'formik';
 import * as yup from 'yup';
 import axios from 'axios';
 //mui
-import { Button, TextField, Typography } from '@mui/material';
+import { Button, TextField, Typography, Grid } from '@mui/material';
 
 /**
  * The yup validation for the store
@@ -46,75 +46,84 @@ const AddStoreForm = ({ onAddStore, id }: AddStoreFormProps): JSX.Element => {
 
 	return (
 		<form onSubmit={formik.handleSubmit}>
-			<Typography variant='h6'>Add a new Store</Typography>
-			<TextField
-				sx={{ marginY: '0.3rem' }}
-				fullWidth
-				id='store_name'
-				name='store_name'
-				label='Store Name'
-				value={formik.values.store_name}
-				onChange={formik.handleChange}
-				error={formik.touched.store_name && Boolean(formik.errors.store_name)}
-				helperText={formik.touched.store_name && formik.errors.store_name}
-			/>
-			<TextField
-				sx={{ marginY: '0.3rem' }}
-				fullWidth
-				id='store_info'
-				name='store_info'
-				label='Store Info'
-				value={formik.values.store_info}
-				onChange={formik.handleChange}
-				error={formik.touched.store_info && Boolean(formik.errors.store_info)}
-				helperText={formik.touched.store_info && formik.errors.store_info}
-			/>
-			<TextField
-				sx={{ marginY: '0.3rem' }}
-				fullWidth
-				id='store_unit'
-				name='store_unit'
-				label='Store Unit No.'
-				value={formik.values.store_unit}
-				onChange={formik.handleChange}
-				error={formik.touched.store_unit && Boolean(formik.errors.store_unit)}
-				helperText={formik.touched.store_unit && formik.errors.store_unit}
-			/>
-			<TextField
-				sx={{ marginY: '0.3rem' }}
-				fullWidth
-				id='weekdays'
-				name='weekdays'
-				label='Weekdays Opening Hours'
-				value={formik.values.weekdays}
-				onChange={formik.handleChange}
-				error={formik.touched.weekdays && Boolean(formik.errors.weekdays)}
-				helperText={formik.touched.weekdays && formik.errors.weekdays}
-			/>
-
-			<TextField
-				sx={{ marginY: '0.3rem' }}
-				fullWidth
-				id='weekends_ph'
-				name='weekends_ph'
-				label='Weekends/PH Opening Hours'
-				value={formik.values.weekends_ph}
-				onChange={formik.handleChange}
-				error={formik.touched.weekends_ph && Boolean(formik.errors.weekends_ph)}
-				helperText={formik.touched.weekends_ph && formik.errors.weekends_ph}
-			/>
-			<TextField
-				sx={{ marginY: '0.3rem' }}
-				fullWidth
-				id='closed'
-				name='closed'
-				label='Closed Days'
-				value={formik.values.closed}
-				onChange={formik.handleChange}
-				error={formik.touched.closed && Boolean(formik.errors.closed)}
-				helperText={formik.touched.closed && formik.errors.closed}
-			/>
-			<Button sx={{ marginTop: '1rem' }} color='primary' variant='contained' fullWidth type='submit'>
+			<Typography variant='h5' sx={{ mb: 2 }}>
+				Add a new store
+			</Typography>
+			<Grid container spacing={1.2}>
+				<Grid item xs={12} md={6}>
+					<TextField
+						fullWidth
+						id='store_name'
+						name='store_name'
+						label='Store Name'
+						value={formik.values.store_name}
+						onChange={formik.handleChange}
+						error={formik.touched.store_name && Boolean(formik.errors.store_name)}
+						helperText={formik.touched.store_name && formik.errors.store_name}
+					/>
+				</Grid>
+				<Grid item xs={12} md={6}>
+					<TextField
+						fullWidth
+						id='store_unit'
+						name='store_unit'
+						label='Store Unit No.'
+						value={formik.values.store_unit}
+						onChange={formik.handleChange}
+						error={formik.touched.store_unit && Boolean(formik.errors.store_unit)}
+						helperText={formik.touched.store_unit && formik.errors.store_unit}
+					/>
+				</Grid>
+				<Grid item xs={12}>
+					<TextField
+						fullWidth
+						id='store_info'
+						name='store_info'
+						label='Store Info'
+						value={formik.values.store_info}
+						onChange={formik.handleChange}
+						error={formik.touched.store_info && Boolean(formik.errors.store_info)}
+						helperText={formik.touched.store_info && formik.errors.store_info}
+					/>
+				</Grid>
+				<Grid item xs={12} md={6}>
+					<TextField
+						fullWidth
+						id='weekdays'
+						name='weekdays'
+						label='Weekdays Opening Hours'
+						value={formik.values.weekdays}
+						onChange={formik.handleChange}
+						error={formik.touched.weekdays && Boolean(formik.errors.weekdays)}
+						helperText={formik.touched.weekdays && formik.errors.weekdays}
+					/>
+				</Grid>
+				<Grid item xs={12} md={6}>
+					<TextField
+						fullWidth
+						id='weekends_ph'
+						name='weekends_ph'
+						label='Weekends/PH Opening Hours'
+						value={formik.values.weekends_ph}
+						onChange={formik.handleChange}
+						error={formik.touched.weekends_ph && Boolean(formik.errors.weekends_ph)}
+						helperText={formik.touched.weekends_ph && formik.errors.weekends_ph}
+					/>
+				</Grid>
+				<Grid item xs={12}>
+					<TextField
+						fullWidth
+						id='closed'
+						name='closed'
+						label='Closed Days'
+						value={formik.values.closed}
+						onChange={formik.handleChange}
+						error={formik.touched.closed && Boolean(formik.errors.closed)}
+						helperText={formik.touched.closed && formik.errors.closed}
+					/>
+				</Grid>
+			</Grid>
+			<Button sx={{ marginTop: '1rem' }} color='primary' variant='contained' fullWidth size='large' type='submit'>
 				Submit
 			</Button>
 		</form>

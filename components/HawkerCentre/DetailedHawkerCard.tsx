@@ -5,7 +5,7 @@ import { isCentreOpen, getQuarter } from '@utils/dates';
 //lib
 import React from 'react';
 //mui
-import { Card, CardActions, CardContent, CardMedia, Button, Typography, Link } from '@mui/material';
+import { Card, CardActions, CardContent, CardMedia, Button, Typography, Link, Chip, Stack } from '@mui/material';
 
 /**
  * Renders the detailed hawker card component
@@ -22,25 +22,25 @@ const DetailedHawkerCard = ({ hawkerCentre, addStore }: DetailedHawkerCardProps)
 
 	return (
 		<>
-			<Card raised sx={{ marginTop: '5rem' }}>
-				<CardMedia component='img' alt='green iguana' height='200' image={hawkerCentre.photourl} />
+			<Card raised sx={{ borderRadius: 3, overflow: 'hidden' }}>
+				<CardMedia component='img' alt={hawkerCentre.name} height='260' image={hawkerCentre.photourl} />
 				<CardContent>
-					<Typography gutterBottom variant='h5' component='div'>
+					<Typography gutterBottom variant='h4' component='div'>
 						{hawkerCentre.name}
 					</Typography>
-					<Typography variant='body2' color='text.secondary'>
+					<Typography variant='body1' color='text.secondary' sx={{ mb: 2 }}>
 						{hawkerCentre.description_myenv}
 					</Typography>
-					<Typography>Food stalls: {hawkerCentre.no_of_food_stalls}</Typography>
-					<Typography>Market stalls: {hawkerCentre.no_of_market_stalls}</Typography>
-					<Typography>Street address: {hawkerCentre.address_myenv}</Typography>
-					<Typography variant='h6' sx={{ color: open ? 'green' : 'red', fontWeight: '600' }}>
-						{open ? 'Open' : 'Closed'}
-					</Typography>
+					<Stack direction='row' spacing={1} sx={{ mb: 1.5, flexWrap: 'wrap', rowGap: 1 }}>
+						<Chip label={`Food stalls: ${hawkerCentre.no_of_food_stalls}`} />
+						<Chip label={`Market stalls: ${hawkerCentre.no_of_market_stalls}`} />
+						<Chip color={open ? 'success' : 'error'} label={open ? 'Open now' : 'Currently closed'} />
+					</Stack>
+					<Typography sx={{ mb: 1 }}>Street address: {hawkerCentre.address_myenv}</Typography>
 					{remarks && <Typography>{remarks}</Typography>}
 				</CardContent>
-				<CardActions>
-					<Button size='small' variant='outlined'>
+				<CardActions sx={{ px: 2, pb: 2, gap: 1.2 }}>
+					<Button size='small' variant='outlined' color='primary'>
 						<Link
 							underline='none'
 							target='_blank'

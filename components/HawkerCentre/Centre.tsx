@@ -6,7 +6,7 @@ import { Store } from '@interfaces/supabase';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 //mui
-import { Container, Modal } from '@mui/material';
+import { Container } from '@mui/material';
 //components
 import DetailedHawkerCard from '@components/HawkerCentre/DetailedHawkerCard';
 import Header from '@components/shared/Header';
@@ -89,7 +89,7 @@ const Centre = ({ id }: CentreProps): JSX.Element => {
 					<Loader />
 				</div>
 			) : (
-				<Container fixed maxWidth='lg' disableGutters>
+				<Container fixed maxWidth='lg' sx={{ py: { xs: 3, md: 5 } }}>
 					<DetailedHawkerCard hawkerCentre={hawkerCentre} addStore={openAddStoreForm} />
 					<StoreList stores={hawkerStores} filter={storeFilter} />
 					<AddStoreModal open={addStore} closeModal={closeAddStoreForm} onAddStore={onAddStore} id={id} />
