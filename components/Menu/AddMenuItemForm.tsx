@@ -32,7 +32,6 @@ const AddMenuItemForm = ({ onAddItem, store_id }: AddMenuItemFormProps): JSX.Ele
 		onSubmit: async (values) => {
 			formik.resetForm();
 			const data = await axios.post(`/api/menu/${store_id}`, values);
-			console.log(data.data);
 			onAddItem(data.data as StoreMenus);
 		},
 	});
