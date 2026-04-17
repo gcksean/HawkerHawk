@@ -12,8 +12,13 @@ import SearchIcon from '@mui/icons-material/Search';
  */
 const SearchBar = ({ setFilter, searchTerm }: SearchBarProps): JSX.Element => (
 	<TextField
-		sx={{ marginX: '2rem' }}
-		autoFocus
+		sx={{
+			width: '100%',
+			'& .MuiOutlinedInput-root': {
+				bgcolor: 'rgba(255, 255, 255, 0.98)',
+				borderRadius: 2.5,
+			},
+		}}
 		onChange={(e) => setFilter(e.target.value)}
 		id='outlined-basic'
 		label={`Search for ${searchTerm}`}
@@ -24,7 +29,8 @@ const SearchBar = ({ setFilter, searchTerm }: SearchBarProps): JSX.Element => (
 				</InputAdornment>
 			),
 		}}
-		variant='standard'
+		variant='outlined'
+		size='small'
 	/>
 );
 

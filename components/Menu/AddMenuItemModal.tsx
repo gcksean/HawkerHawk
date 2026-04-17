@@ -15,11 +15,13 @@ const style = {
 	top: '50%',
 	left: '50%',
 	transform: 'translate(-50%, -50%)',
-	width: 800,
+	width: 'min(560px, 92vw)',
 	bgcolor: 'background.paper',
-	border: '2px solid blue',
-	boxShadow: 24,
-	p: 4,
+	border: '1px solid',
+	borderColor: 'divider',
+	borderRadius: 3,
+	boxShadow: '0 22px 48px -20px rgba(18, 32, 51, 0.5)',
+	p: 3,
 };
 
 /**
@@ -42,7 +44,7 @@ const AddMenuItemModal = ({ onAddItem, store_id }: AddMenuItemModalProps): JSX.E
 			<Modal open={open} onClose={closeModal}>
 				<Box sx={style}>
 					<AddMenuItemForm store_id={store_id} onAddItem={onAddItem} />
-					<Button fullWidth onClick={closeModal} variant='contained' color='error'>
+					<Button sx={{ mt: 1 }} fullWidth onClick={closeModal} variant='outlined' color='inherit'>
 						Close
 					</Button>
 				</Box>

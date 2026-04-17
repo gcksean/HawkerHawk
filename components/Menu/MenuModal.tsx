@@ -17,11 +17,15 @@ const style = {
 	top: '50%',
 	left: '50%',
 	transform: 'translate(-50%, -50%)',
-	width: 800,
+	width: 'min(860px, 94vw)',
+	maxHeight: '88vh',
+	overflowY: 'auto',
 	bgcolor: 'background.paper',
-	border: '2px solid blue',
-	boxShadow: 24,
-	p: 4,
+	border: '1px solid',
+	borderColor: 'divider',
+	borderRadius: 3,
+	boxShadow: '0 22px 48px -20px rgba(18, 32, 51, 0.5)',
+	p: { xs: 2.5, md: 3.5 },
 };
 
 /**
@@ -45,11 +49,11 @@ const MenuModal = ({ open, closeModal, store }: MenuModalProps): JSX.Element => 
 	return (
 		<Modal open={open} onClose={closeModal}>
 			<Box sx={style}>
-				<Typography variant='h5' id='modal-modal-title'>
+				<Typography variant='h5' id='modal-modal-title' sx={{ mb: 0.5 }}>
 					{store.store_name}
 				</Typography>
-				<Typography>{store.store_info}</Typography>
-				<Typography variant='h5' id='modal-modal-title'>
+				<Typography sx={{ color: 'text.secondary', mb: 2 }}>{store.store_info}</Typography>
+				<Typography variant='h6' id='modal-modal-title' sx={{ mb: 1.2 }}>
 					Menu
 				</Typography>
 				<AddMenuItemModal store_id={store.store_id} onAddItem={onAddItem} />

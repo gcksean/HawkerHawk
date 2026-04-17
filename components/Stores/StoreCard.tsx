@@ -3,7 +3,7 @@ import StoreCardProps from '@interfaces/Stores/StoreCard';
 //lib
 import { useState } from 'react';
 //mui
-import { Card, CardContent, Typography, Button, Modal, Box, Table, TableContainer, TableCell, TableRow, TableHead, TableBody } from '@mui/material';
+import { Card, CardContent, Typography, Button, Chip, Stack } from '@mui/material';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 //components
 import MenuModal from '@components/Menu/MenuModal';
@@ -25,16 +25,19 @@ const StoreCard = ({ store }: StoreCardProps): JSX.Element => {
 
 	const { weekdays, weekends_ph, closed } = store.store_hours[0];
 	return (
-		<Card sx={{ maxWidth: 240 }}>
+		<Card sx={{ height: '100%', borderRadius: 3 }}>
 			<CardContent>
-				<Typography variant='h6'>{store.store_name}</Typography>
-				<Typography>Unit: {store.store_unit}</Typography>
-				<Typography>Opening hours:</Typography>
-				<Typography>Weekdays: {weekdays}</Typography>
-				<Typography>Weekends/PH: {weekends_ph}</Typography>
-				<Typography>Closed on: {closed}</Typography>
-				<Button onClick={openModal} variant='contained' size='small'>
-					<MenuBookIcon />
+				<Typography variant='h6' sx={{ mb: 1 }}>
+					{store.store_name}
+				</Typography>
+				<Chip size='small' label={`Unit ${store.store_unit}`} sx={{ mb: 1.5 }} />
+				<Typography sx={{ color: 'text.secondary', mb: 1.5 }}>{store.store_info}</Typography>
+				<Stack spacing={0.4} sx={{ mb: 2.2 }}>
+					<Typography variant='body2'>Weekdays: {weekdays}</Typography>
+					<Typography variant='body2'>Weekends/PH: {weekends_ph}</Typography>
+					<Typography variant='body2'>Closed on: {closed}</Typography>
+				</Stack>
+				<Button onClick={openModal} variant='contained' size='small' fullWidth startIcon={<MenuBookIcon />}>
 					View menu
 				</Button>
 				<MenuModal store={store} open={open} closeModal={closeModal} />
