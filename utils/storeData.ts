@@ -18,11 +18,16 @@ let writeQueue: Promise<void> = Promise.resolve();
 async function readData(): Promise<StoreData> {
 	try {
 		const raw = await fsPromises.readFile(DATA_FILE, 'utf-8');
+		let parsed: unknown;
 		try {
-			return JSON.parse(raw) as StoreData;
+			parsed = JSON.parse(raw);
 		} catch {
 			throw new Error(`Data file at ${DATA_FILE} is corrupted or contains invalid JSON.`);
 		}
+		if (!parsed || typeof parsed !== 'object' || !Array.isArray((parsed as StoreData).stores)) {
+			throw new Error(`Data file at ${DATA_FILE} is missing the expected 'stores' array.`);
+		}
+		return parsed as StoreData;
 	} catch (err: unknown) {
 		const isNodeError = (e: unknown): e is NodeJS.ErrnoException => e instanceof Error && 'code' in e;
 		if (isNodeError(err) && err.code === 'ENOENT') {
@@ -37,7 +42,12 @@ async function readData(): Promise<StoreData> {
  * to prevent concurrent overwrites corrupting the file.
  */
 function writeData(data: StoreData): Promise<void> {
-	writeQueue = writeQueue.then(() => fsPromises.writeFile(DATA_FILE, JSON.stringify(data, null, 2), 'utf-8'));
+	writeQueue = writeQueue
+		.then(() => fsPromises.writeFile(DATA_FILE, JSON.stringify(data, null, 2), 'utf-8'))
+		.catch((err: unknown) => {
+			console.error('Failed to write data file:', err);
+			writeQueue = Promise.resolve();
+		});
 	return writeQueue;
 }
 
