@@ -1,9 +1,7 @@
 import { StoreMenus } from '@interfaces/supabase';
-import { createClient } from '@supabase/supabase-js';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import cors from '@utils/cors';
-
-const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL as string, process.env.SUPABASE_KEY as string);
+import { addMenuItem, getMenuItemsByStore } from '@utils/storeData';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<StoreMenus[] | StoreMenus>) {
 	await cors(req, res);
@@ -13,38 +11,24 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 		method,
 		body,
 	} = req;
-	console.log(body);
 
 	if (method === 'POST') {
-		const { data: menu_data, error: menu_error } = await supabase.from<StoreMenus>('store_menus').insert([
-			{
-				store_id: id as string,
-				item_name: body.item_name,
-				item_price: body.item_price,
-			},
-		]);
-
-		if (menu_error || !menu_data) {
-			console.log(menu_error);
-			return res.status(500);
+		try {
+			const menuItem = addMenuItem(id as string, body.item_name, body.item_price);
+			return res.status(201).json(menuItem);
+		} catch (err) {
+			console.log(err);
+			return res.status(500).end();
 		}
-
-		console.log('backend');
-		console.log(menu_data);
-		return res.status(201).json(menu_data[0]);
 	}
 
 	if (method === 'GET') {
-		const { data, error } = await supabase
-			.from<StoreMenus>('store_menus')
-			.select()
-			.match({ store_id: id as string });
-
-		if (error || !data) {
-			console.log(error);
-			return res.status(500);
+		try {
+			const menuItems = getMenuItemsByStore(id as string);
+			return res.status(200).json(menuItems);
+		} catch (err) {
+			console.log(err);
+			return res.status(500).end();
 		}
-
-		return res.status(200).json(data);
 	}
 }
