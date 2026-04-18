@@ -1,6 +1,6 @@
 import { Store, StoreHours, StoreMenus } from '@interfaces/supabase';
 import { randomUUID } from 'crypto';
-import fs from 'fs';
+import { promises as fsPromises } from 'fs';
 import path from 'path';
 
 const DATA_FILE = path.join(process.cwd(), 'data', 'stores.json');
@@ -10,32 +10,40 @@ interface StoreData {
 }
 
 /**
- * Reads the stores data from the JSON file
+ * Reads the stores data from the JSON file asynchronously
  */
-function readData(): StoreData {
-	const raw = fs.readFileSync(DATA_FILE, 'utf-8');
-	return JSON.parse(raw) as StoreData;
+async function readData(): Promise<StoreData> {
+	try {
+		const raw = await fsPromises.readFile(DATA_FILE, 'utf-8');
+		return JSON.parse(raw) as StoreData;
+	} catch (err: unknown) {
+		const isNodeError = (e: unknown): e is NodeJS.ErrnoException => e instanceof Error && 'code' in e;
+		if (isNodeError(err) && err.code === 'ENOENT') {
+			throw new Error(`Data file not found at ${DATA_FILE}. Ensure data/stores.json exists in the project root.`);
+		}
+		throw new Error(`Failed to read or parse data file: ${(err as Error).message}`);
+	}
 }
 
 /**
- * Writes the stores data back to the JSON file
+ * Writes the stores data back to the JSON file asynchronously
  */
-function writeData(data: StoreData): void {
-	fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2), 'utf-8');
+async function writeData(data: StoreData): Promise<void> {
+	await fsPromises.writeFile(DATA_FILE, JSON.stringify(data, null, 2), 'utf-8');
 }
 
 /**
  * Returns all stores for a given hawker centre
  */
-export function getStoresByHawkerCentre(hawkerSerialNo: number): Store[] {
-	const { stores } = readData();
+export async function getStoresByHawkerCentre(hawkerSerialNo: number): Promise<Store[]> {
+	const { stores } = await readData();
 	return stores.filter((store) => store.hawker_serial_no === hawkerSerialNo);
 }
 
 /**
  * Adds a new store (with hours) to the data file and returns the created store
  */
-export function addStore(
+export async function addStore(
 	hawkerSerialNo: number,
 	storeInfo: string,
 	storeName: string,
@@ -43,8 +51,8 @@ export function addStore(
 	weekdays: string,
 	weekendsPh: string,
 	closed: string
-): Store {
-	const data = readData();
+): Promise<Store> {
+	const data = await readData();
 
 	const storeId = randomUUID();
 	const hours: StoreHours = {
@@ -64,15 +72,15 @@ export function addStore(
 	};
 
 	data.stores.push(store);
-	writeData(data);
+	await writeData(data);
 	return store;
 }
 
 /**
  * Adds a menu item to a store and returns the created menu item
  */
-export function addMenuItem(storeId: string, itemName: string, itemPrice: string): StoreMenus {
-	const data = readData();
+export async function addMenuItem(storeId: string, itemName: string, itemPrice: string): Promise<StoreMenus> {
+	const data = await readData();
 
 	const storeIndex = data.stores.findIndex((s) => s.store_id === storeId);
 	if (storeIndex === -1) {
@@ -87,15 +95,15 @@ export function addMenuItem(storeId: string, itemName: string, itemPrice: string
 	};
 
 	data.stores[storeIndex].store_menus.push(menuItem);
-	writeData(data);
+	await writeData(data);
 	return menuItem;
 }
 
 /**
  * Returns all menu items for a given store
  */
-export function getMenuItemsByStore(storeId: string): StoreMenus[] {
-	const { stores } = readData();
+export async function getMenuItemsByStore(storeId: string): Promise<StoreMenus[]> {
+	const { stores } = await readData();
 	const store = stores.find((s) => s.store_id === storeId);
 	return store ? store.store_menus : [];
 }

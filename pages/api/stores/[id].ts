@@ -14,7 +14,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
 	if (method === 'POST') {
 		try {
-			const store = addStore(
+			const store = await addStore(
 				Number(id),
 				body.store_info,
 				body.store_name,
@@ -31,7 +31,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 	}
 
 	try {
-		const stores = getStoresByHawkerCentre(Number(id));
+		const stores = await getStoresByHawkerCentre(Number(id));
 		return res.status(200).json(stores);
 	} catch (err) {
 		console.log(err);

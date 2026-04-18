@@ -14,7 +14,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
 	if (method === 'POST') {
 		try {
-			const menuItem = addMenuItem(id as string, body.item_name, body.item_price);
+			const menuItem = await addMenuItem(id as string, body.item_name, body.item_price);
 			return res.status(201).json(menuItem);
 		} catch (err) {
 			console.log(err);
@@ -24,7 +24,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
 	if (method === 'GET') {
 		try {
-			const menuItems = getMenuItemsByStore(id as string);
+			const menuItems = await getMenuItemsByStore(id as string);
 			return res.status(200).json(menuItems);
 		} catch (err) {
 			console.log(err);
