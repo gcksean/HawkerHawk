@@ -9,27 +9,36 @@ interface StoreData {
 	stores: Store[];
 }
 
+/** Serialises all write operations within this process to prevent concurrent file corruption */
+let writeQueue: Promise<void> = Promise.resolve();
+
 /**
  * Reads the stores data from the JSON file asynchronously
  */
 async function readData(): Promise<StoreData> {
 	try {
 		const raw = await fsPromises.readFile(DATA_FILE, 'utf-8');
-		return JSON.parse(raw) as StoreData;
+		try {
+			return JSON.parse(raw) as StoreData;
+		} catch {
+			throw new Error(`Data file at ${DATA_FILE} is corrupted or contains invalid JSON.`);
+		}
 	} catch (err: unknown) {
 		const isNodeError = (e: unknown): e is NodeJS.ErrnoException => e instanceof Error && 'code' in e;
 		if (isNodeError(err) && err.code === 'ENOENT') {
 			throw new Error(`Data file not found at ${DATA_FILE}. Ensure data/stores.json exists in the project root.`);
 		}
-		throw new Error(`Failed to read or parse data file: ${(err as Error).message}`);
+		throw err;
 	}
 }
 
 /**
- * Writes the stores data back to the JSON file asynchronously
+ * Writes the stores data back to the JSON file, serialised through a per-process queue
+ * to prevent concurrent overwrites corrupting the file.
  */
-async function writeData(data: StoreData): Promise<void> {
-	await fsPromises.writeFile(DATA_FILE, JSON.stringify(data, null, 2), 'utf-8');
+function writeData(data: StoreData): Promise<void> {
+	writeQueue = writeQueue.then(() => fsPromises.writeFile(DATA_FILE, JSON.stringify(data, null, 2), 'utf-8'));
+	return writeQueue;
 }
 
 /**
